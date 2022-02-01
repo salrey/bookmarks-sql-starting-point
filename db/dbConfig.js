@@ -8,6 +8,7 @@ const cn = {
   user: process.env.PG_USER,
 };
 
+//query the database
 const database = pgp(cn);
 
 module.exports = database;
