@@ -23,9 +23,9 @@ const getBookmark = async (id) => {
 }
 
 const createBookmark = async (newBookmark) => {
-  const { name, url, category, is_favorite } = newBookmark
-  const query = `INSERT INTO bookmarks (name, url, category, is_favorite) VALUES ($1, $2, $3, $4) RETURNING *`
   try {
+    const { name, url, category, is_favorite } = newBookmark
+    const query = `INSERT INTO bookmarks (name, url, category, is_favorite) VALUES ($1, $2, $3, $4) RETURNING *`
     const bookmark = await db.one(query, [name, url, category, is_favorite])
     return bookmark
 
@@ -44,9 +44,23 @@ const deleteBookmark = async (id) => {
   }
 }
 
+const updateBookmark = async (id, bookmark) => {
+  //Have your deconstruction inside try so that if there's an error, the deconstruction need not run
+  try {
+    const { name, url, category, is_favorite } = bookmark
+    const updatedBookmark = await db.one("UPDATE bookmarks SET name=$1, url=$2, category=$3, is_favorite=$4 WHERE id=$5 RETURNING *", [name, url, category, is_favorite, id])
+    return updatedBookmark
+
+    // "UPDATE bookmarks WHERE id=$1 SET (name, url, category, is_favorite) VALUES ($2,$3,$4,$5) RETURNING *"
+  } catch(err) {
+    return err
+  }
+}
+
 module.exports = {
   getAllBookmarks,
   getBookmark, 
   createBookmark,
-  deleteBookmark
+  deleteBookmark,
+  updateBookmark
 }

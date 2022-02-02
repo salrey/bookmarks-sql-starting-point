@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { getAllBookmarks, getBookmark, createBookmark, deleteBookmark } = require("../queries/bookmarks");
+const { getAllBookmarks, getBookmark, createBookmark, deleteBookmark, updateBookmark } = require("../queries/bookmarks");
 
 const bookmarks = express.Router();
 
@@ -44,5 +44,15 @@ bookmarks.delete("/:id", async (request, response) => {
     response.redirect("/redirect")
   }
 })
+
+bookmarks.put("/:id", async (request, response) => {
+  const {id} = request.params
+  const updatedBookmark = request.body
+  
+  const bookmark = await updateBookmark(id, updatedBookmark)
+  response.status(200).json(bookmark)
+  
+})
+
 
 module.exports = bookmarks;
