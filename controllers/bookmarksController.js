@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { getAllBookmarks, getBookmark, createBookmark } = require("../queries/bookmarks");
+const { getAllBookmarks, getBookmark, createBookmark, deleteBookmark } = require("../queries/bookmarks");
 
 const bookmarks = express.Router();
 
@@ -20,7 +20,7 @@ bookmarks.get("/:id", async (request, response) => {
   console.log("GET request to /:id");
   const bookmark = await getBookmark(request.params.id)
 
-  if (bookmarks) {
+  if (bookmark.id) {
     response.status(200).json(bookmark)
   } else {
     response.redirect("/redirect")
@@ -31,6 +31,18 @@ bookmarks.post("/", async (request, response) => {
   console.log("CREATE request to /");
   const bookmark = await createBookmark(request.body)
   response.status(201).json(bookmark)
+})
+
+bookmarks.delete("/:id", async (request, response) => {
+  const { id } = request.params
+  console.log("DELETE from /:id")
+  const bookmark = await deleteBookmark(id)
+  //if bookmark doesn't exist it'll still show up as an object so check if id exists to make sure it's the right object
+  if (bookmark.id) {
+    response.status(200).json(bookmark)
+  } else {
+    response.redirect("/redirect")
+  }
 })
 
 module.exports = bookmarks;

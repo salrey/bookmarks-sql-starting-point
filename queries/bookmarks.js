@@ -34,8 +34,19 @@ const createBookmark = async (newBookmark) => {
   }
 }
 
+const deleteBookmark = async (id) => {
+  try {
+    const deletedBookmark = await db.one("DELETE FROM bookmarks WHERE id=$1 RETURNING *", id)
+    return deletedBookmark;
+
+  } catch(err) {
+    return err
+  }
+}
+
 module.exports = {
   getAllBookmarks,
   getBookmark, 
-  createBookmark
+  createBookmark,
+  deleteBookmark
 }
