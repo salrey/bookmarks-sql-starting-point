@@ -50,8 +50,12 @@ bookmarks.put("/:id", async (request, response) => {
   const updatedBookmark = request.body
   
   const bookmark = await updateBookmark(id, updatedBookmark)
-  response.status(200).json(bookmark)
-  
+  if (bookmark.id) {
+    response.status(200).json(bookmark)
+  } else {
+    response.redirect("/redirect")
+  }
+
 })
 
 
